@@ -751,9 +751,14 @@ name = "pendulum"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "jax", extra = ["cuda13"] },
+    { name = "jax" },
     { name = "matplotlib" },
     { name = "numpy" },
+]
+
+[package.optional-dependencies]
+cuda = [
+    { name = "jax", extra = ["cuda13"] },
 ]
 
 [package.dev-dependencies]
@@ -764,10 +769,12 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "jax", extras = ["cuda13"], specifier = ">=0.9.0.1" },
+    { name = "jax", specifier = ">=0.9.0.1" },
+    { name = "jax", extras = ["cuda13"], marker = "extra == 'cuda'", specifier = ">=0.9.0.1" },
     { name = "matplotlib", specifier = ">=3.10.8" },
     { name = "numpy", specifier = ">=2.4.2" },
 ]
+provides-extras = ["cuda"]
 
 [package.metadata.requires-dev]
 dev = [
