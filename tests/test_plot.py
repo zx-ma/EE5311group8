@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
@@ -24,4 +26,4 @@ grad_fn = jax.grad(final_angle)
 print(grad_fn(0.5))
 
 
-animate_pendulum(traj, 0.01)
+animate_pendulum(traj, 0.01, save_path=Path("data") / "default" / "1.gif")

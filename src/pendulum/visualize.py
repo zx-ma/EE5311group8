@@ -19,7 +19,7 @@ def plot_trajectory(traj, dt):
     return fig
 
 
-def animate_pendulum(traj, dt, pendu_len=1.0, skip=5):
+def animate_pendulum(traj, dt, pendu_len=1.0, skip=5, save_path=None):
     angles = traj[:, 0]
 
     fig, ax = plt.subplots(figsize=(4, 4))
@@ -27,7 +27,7 @@ def animate_pendulum(traj, dt, pendu_len=1.0, skip=5):
     ax.set_ylim(-pendu_len * 1.3, pendu_len * 1.3)
     ax.set_aspect("equal")
 
-    (rod,) = ax.plot([], [], "o-", color="steelblue", lw=2, markersize=8)
+    (rod,) = ax.plot([], [], "o-", color="royalblue", lw=2, markersize=8)
     ax.plot(0, 0, "ks", markersize=6)
     time_text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
 
@@ -41,6 +41,11 @@ def animate_pendulum(traj, dt, pendu_len=1.0, skip=5):
         return rod, time_text
 
     n_frames = len(angles) // skip
-    anim = FuncAnimation(fig, update, frames=n_frames, interval=dt * skip * 1000, blit=True)
+    anim = FuncAnimation(fig, update, frames=n_frames, interval=dt * skip * 1000, blit=True, repeat=False)
+    if save_path:
+        from pathlib import Path
+
+        Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+        anim.save(save_path, writer="pillow")
     plt.show()
     return anim
