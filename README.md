@@ -22,6 +22,9 @@ do `uv add <package name>` to install package u need
 (or just source the venv and call python)
 - uv run tests/test_physics.py 
 
+# seems good? 
+- uv run tests/visualize.py 
+- uv run tests/test_pid.py
 
-
-
+# external 
+- https://en.wikipedia.org/wiki/Inverted_pendulum
