@@ -13,6 +13,9 @@ cuda = ["jax[cuda13]>=0.9.0.1"]
 dev = ["pre-commit>=4.5.1", "ruff>=0.15.0"]
 
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/pendulum", "src/controllers"]
+
 [tool.uv]
 package = true
 
