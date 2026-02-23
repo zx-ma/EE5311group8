@@ -1,17 +1,26 @@
 import jax
 import jax.numpy as jnp
 
-DEFAULT_PARAMS = {"g": 9.81, "l": 1.0, "m": 1.0}
+DEFAULT_PARAMS = {"g": 9.81, "l": 1.0, "mc": 1.0, "mp": 0.1}
 
 
-def dynamics(state, torque, env_params):
-    angle, angular_v = state
+def dynamics(state, force, env_params):
+    x, theta, x_dot, theta_dot = state
+    g = env_params["g"]
+    pole_len = env_params["l"]
+    mc = env_params["mc"]
+    mp = env_params["mp"]
 
-    g_impac = (env_params["g"] / env_params["l"]) * jnp.sin(angle)
-    manual_impac = torque / (env_params["m"] * (env_params["l"] ** 2))
-    angular_acc = g_impac + manual_impac
+    sin_t = jnp.sin(theta)
+    cos_t = jnp.cos(theta)
+    denom = mc + mp * sin_t**2
 
-    return jnp.array([angular_v, angular_acc])
+    x_ddot = (mp * pole_len * theta_dot**2 * sin_t - mp * g * sin_t * cos_t + force) / denom
+    theta_ddot = ((mc + mp) * g * sin_t - mp * pole_len * theta_dot**2 * sin_t * cos_t - force * cos_t) / (
+        pole_len * denom
+    )
+
+    return jnp.array([x_dot, theta_dot, x_ddot, theta_ddot])
 
 
 def step(state, torque, dt, env_params):
