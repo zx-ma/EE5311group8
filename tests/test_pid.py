@@ -8,7 +8,7 @@ from pendulum.visualize import animate_cartpole, plot_trajectory
 
 # state: [x, theta, x_dot, theta_dot]
 state0 = jnp.array([0.0, 0.1, 0.0, 0.0])
-pid_params = jnp.array([100.0, 20.0, 5.0, 10.0])  # Kp_theta, Kd_theta, Kp_x, Kd_x
+pid_params = jnp.array([1500.0, 50.0, 5.0, 10.0])  # Kp_theta, Kd_theta, Kp_x, Kd_x
 dt = 0.01
 n_steps = 1000
 

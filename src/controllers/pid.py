@@ -10,7 +10,7 @@ def pid_control(state, error_sum, params):
 
     # positive force pushes cart right, which tilts pole left (reduces positive theta)
     force = Kp_theta * theta + Kd_theta * theta_dot + Kp_x * (0 - x) + Kd_x * (0 - x_dot)
-    return force
+    return jnp.clip(force, -200.0, 200.0)
 
 
 def simulate_pid(state0, pid_params, dt, n_steps, env_params):
