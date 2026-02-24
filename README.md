@@ -29,5 +29,17 @@ do `uv add <package name>` to install package u need
 ## run this to compare the manual param setting for pid, and adamw optimised
 - uv run  tests/test_optimize_pid.py
 
+## to compare adam and l-bfgs (we need discuss first order optimization and second order opt,) this is for traditional control, only 4 params
+- uv run  tests/test_compare_optimizers.py
+
+## neuron network methods 
+
+
+
+## rl
+
+
+
+
 # external 
 - https://en.wikipedia.org/wiki/Inverted_pendulum
