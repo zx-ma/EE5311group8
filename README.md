@@ -26,5 +26,8 @@ do `uv add <package name>` to install package u need
 - uv run tests/test_physics.py
 - uv run tests/test_plot.py
 
+## run this to compare the manual param setting for pid, and adamw optimised
+- uv run  tests/test_optimize_pid.py
+
 # external 
 - https://en.wikipedia.org/wiki/Inverted_pendulum
