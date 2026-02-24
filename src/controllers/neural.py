@@ -12,9 +12,9 @@ class Policy(eqx.Module):
     def __init__(self, key):
         k1, k2, k3 = jax.random.split(key, 3)
         self.layers = [
-            eqx.nn.Linear(5, 64, key=k1),
-            eqx.nn.Linear(64, 64, key=k2),
-            eqx.nn.Linear(64, 1, key=k3),
+            eqx.nn.Linear(5, 512, key=k1),
+            eqx.nn.Linear(512, 512, key=k2),
+            eqx.nn.Linear(512, 1, key=k3),
         ]
 
     def __call__(self, obs):

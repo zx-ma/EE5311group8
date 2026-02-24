@@ -8,11 +8,11 @@ from pendulum.visualize import animate_cartpole, plot_trajectory
 
 state0 = jnp.array([0.0, 0.1, 0.0, 0.0])
 dt = 0.01
-horizon = 500
+horizon = 800
 eval_horizon = 1000
 
 print("--- training neural controller ---")
-policy = train_nn(state0, dt, horizon, DEFAULT_PARAMS, lr=0.003, epochs=2000)
+policy = train_nn(state0, dt, horizon, DEFAULT_PARAMS, lr=0.001, epochs=2000)
 
 loss = nn_loss(policy, state0, dt, horizon, DEFAULT_PARAMS)
 print(f"\nfinal loss: {float(loss):.6f}")
