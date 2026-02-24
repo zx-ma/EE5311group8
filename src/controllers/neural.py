@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import equinox as eqx
 import jax
 import jax.numpy as jnp
@@ -57,7 +59,21 @@ def train_step(policy, opt_state, state0, dt, n_steps, env_params, optimizer):
     return loss, new_policy, new_opt_state
 
 
-def train_nn(state0, dt, n_steps, env_params, lr=0.001, epochs=500, seed=0):
+def save_policy(policy, path="data/neural/policy.eqx"):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    eqx.tree_serialise_leaves(path, policy)
+    print(f"  saved policy to {path}")
+
+
+def load_policy(path="data/neural/policy.eqx", seed=0):
+    skeleton = Policy(jax.random.PRNGKey(seed))
+    policy = eqx.tree_deserialise_leaves(path, skeleton)
+    print(f"  loaded policy from {path}")
+    return policy
+
+
+def _train_single(state0, dt, n_steps, env_params, lr, epochs, seed):
     key = jax.random.PRNGKey(seed)
     policy = Policy(key)
     optimizer = optax.chain(optax.clip_by_global_norm(1.0), optax.adam(lr))
@@ -68,4 +84,17 @@ def train_nn(state0, dt, n_steps, env_params, lr=0.001, epochs=500, seed=0):
         if i % 50 == 0 or i == epochs - 1:
             print(f"  epoch {i:4d} | loss {float(loss):.6f}")
 
-    return policy
+    final_loss = float(nn_loss(policy, state0, dt, n_steps, env_params))
+    return policy, final_loss
+
+
+def train_nn(state0, dt, n_steps, env_params, lr=0.001, epochs=500, n_seeds=3):
+    best_policy, best_loss = None, float("inf")
+    for seed in range(n_seeds):
+        print(f"\n  === seed {seed} ===")
+        policy, loss = _train_single(state0, dt, n_steps, env_params, lr, epochs, seed)
+        if loss < best_loss:
+            best_policy, best_loss = policy, loss
+        print(f"  seed {seed} final loss: {loss:.6f}")
+    print(f"\n  best loss: {best_loss:.6f}")
+    return best_policy
