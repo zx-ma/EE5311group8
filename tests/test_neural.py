@@ -1,8 +1,9 @@
+import sys
 from pathlib import Path
 
 import jax.numpy as jnp
 
-from controllers.neural import nn_loss, simulate_nn, train_nn
+from controllers.neural import load_policy, nn_loss, save_policy, simulate_nn, train_nn
 from pendulum.physics import DEFAULT_PARAMS
 from pendulum.visualize import animate_cartpole, plot_trajectory
 
@@ -10,9 +11,15 @@ state0 = jnp.array([0.0, 0.1, 0.0, 0.0])
 dt = 0.01
 horizon = 800
 eval_horizon = 1000
+model_path = Path("data") / "neural" / "policy.eqx"
 
-print("--- training neural controller ---")
-policy = train_nn(state0, dt, horizon, DEFAULT_PARAMS, lr=0.001, epochs=2000)
+if ("--load" in sys.argv or "-l" in sys.argv) and model_path.exists():
+    print("--- loading saved policy ---")
+    policy = load_policy(model_path)
+else:
+    print("--- training neural controller ---")
+    policy = train_nn(state0, dt, horizon, DEFAULT_PARAMS, lr=0.001, epochs=2600)
+    save_policy(policy, model_path)
 
 loss = nn_loss(policy, state0, dt, horizon, DEFAULT_PARAMS)
 print(f"\nfinal loss: {float(loss):.6f}")
